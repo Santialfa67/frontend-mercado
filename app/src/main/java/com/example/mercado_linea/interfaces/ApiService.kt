@@ -1,5 +1,6 @@
 package com.example.mercado_linea.interfaces
 
+import com.example.mercado_linea.model.Producto
 import com.example.mercado_linea.model.Usuario
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -27,6 +28,12 @@ interface ApiService {
 
     @DELETE("usuarios/{id}")
     suspend fun eliminarUsuario(@Path("id") id: Int): Response<Void>
+
+    //PRODUCTO
+
+    @GET("/api/productos")
+    suspend fun obtenerProductos(): Response<List<Producto>>
+
 }
 
 /*
