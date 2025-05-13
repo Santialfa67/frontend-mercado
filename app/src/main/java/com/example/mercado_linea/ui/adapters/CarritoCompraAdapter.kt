@@ -24,7 +24,7 @@ class CarritoCompraAdapter(private var carritoItems: List<CarritoCompra>) :
 
     override fun onBindViewHolder(holder: CarritoViewHolder, position: Int) {
         val currentItem = carritoItems[position]
-        holder.productoIdTextView.text = "Producto ID: ${currentItem.producto_id}"
+        holder.productoIdTextView.text = "Producto ID: ${currentItem.producto}"
         holder.cantidadTextView.text = "Cantidad: ${currentItem.cantidad}"
         // Aquí podrías agregar más lógica para mostrar el nombre del producto, etc.
     }

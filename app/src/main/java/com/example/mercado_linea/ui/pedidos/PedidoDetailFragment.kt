@@ -9,8 +9,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.mercado_linea.R
 import com.example.mercado_linea.ViewModel.PedidoViewModel
+import com.example.mercado_linea.ui.adapters.DetallePedidoAdapter
 
 class PedidoDetailFragment : Fragment() {
 
@@ -21,6 +24,8 @@ class PedidoDetailFragment : Fragment() {
     private lateinit var estadoTextView: TextView
     private lateinit var direccionEnvioTextView: TextView
     private lateinit var metodoPagoTextView: TextView
+    private lateinit var detallesPedidoRecyclerView: RecyclerView
+    private lateinit var detallePedidoAdapter: DetallePedidoAdapter
     private var pedidoId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,11 +46,16 @@ class PedidoDetailFragment : Fragment() {
         estadoTextView = view.findViewById(R.id.estadoTextView)
         direccionEnvioTextView = view.findViewById(R.id.direccionEnvioTextView)
         metodoPagoTextView = view.findViewById(R.id.metodoPagoTextView)
+        detallesPedidoRecyclerView = view.findViewById(R.id.detallesPedidoRecyclerView)
+        detallesPedidoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        detallePedidoAdapter = DetallePedidoAdapter(emptyList())
+        detallesPedidoRecyclerView.adapter = detallePedidoAdapter
 
         pedidoId?.let {
             viewModel.obtenerPedido(it)
@@ -54,13 +64,18 @@ class PedidoDetailFragment : Fragment() {
         viewModel.pedido.observe(viewLifecycleOwner, Observer { pedido ->
             pedido?.let {
                 pedidoIdTextView.text = "ID del Pedido: ${it.pedidoId}"
-                usuarioIdTextView.text = "ID del Usuario: ${it.usuario?.userId ?: "N/A"}" // Asumiendo que tienes la relación Usuario en Pedido
+                usuarioIdTextView.text = "ID del Usuario: ${it.usuario?.userId ?: "N/A"}"
                 totalTextView.text = "Total: $${it.total}"
                 estadoTextView.text = "Estado: ${it.estado}"
                 direccionEnvioTextView.text = "Dirección de Envío: ${it.direccionEnvio}"
                 metodoPagoTextView.text = "Método de Pago: ${it.metodoPago}"
-                // Aquí podrías manejar la lista de detalles del pedido si la implementas
             }
+        })
+
+        viewModel.detallesPedido.observe(viewLifecycleOwner, Observer { detalles ->
+            detallePedidoAdapter.notifyDataSetChanged()
+            detallePedidoAdapter = DetallePedidoAdapter(detalles)
+            detallesPedidoRecyclerView.adapter = detallePedidoAdapter
         })
 
         viewModel.error.observe(viewLifecycleOwner, Observer { error ->

@@ -10,5 +10,4 @@ class UserRepository {
         return usuarioApiService.obtenerUsuario(id)
     }
 
-    // Aquí puedes agregar funciones para interactuar con la API y manejar la lógica de datos
 }

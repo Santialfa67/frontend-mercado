@@ -12,17 +12,17 @@ import androidx.lifecycle.Observer
 import com.example.mercado_linea.R
 import com.example.mercado_linea.ViewModel.UsuarioViewModel
 
-class UsuarioDetailFragment : Fragment() { // O AppCompatActivity si es una Activity
+class UsuarioDetailFragment : Fragment() {
 
     private val viewModel: UsuarioViewModel by viewModels()
     private lateinit var nombreTextView: TextView
     private lateinit var emailTextView: TextView
-    private var usuarioId: Int? = null // Para almacenar el ID del argumento
+    private var usuarioId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            usuarioId = it.getInt("usuarioId") // Obtén el ID del argumento con la clave "usuarioId"
+            usuarioId = it.getInt("usuarioId")
         }
     }
 
@@ -30,8 +30,8 @@ class UsuarioDetailFragment : Fragment() { // O AppCompatActivity si es una Acti
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_usuario_detail, container, false) // Reemplaza con tu layout
-        nombreTextView = view.findViewById(R.id.nombreTextView) // Reemplaza con los IDs de tus vistas
+        val view = inflater.inflate(R.layout.fragment_usuario_detail, container, false)
+        nombreTextView = view.findViewById(R.id.nombreTextView)
         emailTextView = view.findViewById(R.id.emailTextView)
         // Inicializa otras vistas
         return view
@@ -40,7 +40,6 @@ class UsuarioDetailFragment : Fragment() { // O AppCompatActivity si es una Acti
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Llama a obtenerUsuario solo si tenemos un ID
         usuarioId?.let {
             viewModel.obtenerUsuario(it)
         }
@@ -49,7 +48,6 @@ class UsuarioDetailFragment : Fragment() { // O AppCompatActivity si es una Acti
             usuario?.let {
                 nombreTextView.text = it.nombre
                 emailTextView.text = it.email
-                // Actualiza otras vistas con los datos del usuario
             }
         })
 
