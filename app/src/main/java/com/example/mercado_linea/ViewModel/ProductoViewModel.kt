@@ -1,38 +1,35 @@
 package com.example.mercado_linea.ViewModel
 
-import androidx.compose.runtime.getValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mercado_linea.Repository.ProductoRepository
 import com.example.mercado_linea.model.Producto
 import kotlinx.coroutines.launch
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.example.mercado_linea.network.RetrofitClient
+import retrofit2.Response
 
 class ProductoViewModel : ViewModel() {
-    var productos by mutableStateOf<List<Producto>>(emptyList())
-    var error by mutableStateOf("")
+    private val repository = ProductoRepository()
 
-    init {
-        cargarProductos()
-    }
+    private val _producto = MutableLiveData<Producto?>()
+    val producto: LiveData<Producto?> = _producto
 
-    fun cargarProductos() {
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> = _error
+
+    fun obtenerProducto(id: Int) {
         viewModelScope.launch {
-            try {
-                val respuesta = RetrofitClient.apiService.obtenerProductos()
-                if (respuesta.isSuccessful) {
-                    productos = respuesta.body() ?: emptyList()
-                } else {
-                    error = "Error: ${respuesta.code()}"
-                }
-            } catch (e: Exception) {
-                error = "Excepción: ${e.message}"
+            val response = repository.obtenerProducto(id)
+            if (response.isSuccessful) {
+                _producto.value = response.body()
+                _error.value = null
+            } else {
+                _producto.value = null
+                _error.value = "Error al obtener el producto: ${response.message()}"
             }
         }
     }
-}
 
+    // Aquí puedes agregar otras funciones para manejar la lógica de la interfaz de usuario relacionada con el producto
+}

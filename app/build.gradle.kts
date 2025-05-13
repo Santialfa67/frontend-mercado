@@ -50,6 +50,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
+    implementation(libs.picasso)
+
     // Retrofit
     implementation(libs.retrofit) // Retrofit
     implementation(libs.retrofit.converter.gson) // Retrofit Converter Gson
@@ -66,6 +68,8 @@ dependencies {
     implementation(libs.lifecycle.livedata.ktx)
 
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.recyclerview)
 
 
     // Testing

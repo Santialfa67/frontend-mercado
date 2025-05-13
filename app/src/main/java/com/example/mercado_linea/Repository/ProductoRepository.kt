@@ -1,11 +1,16 @@
 package com.example.mercado_linea.Repository
 
 import com.example.mercado_linea.model.Producto
+import com.example.mercado_linea.model.Usuario
 import com.example.mercado_linea.network.RetrofitClient
 import retrofit2.Response
 
 class ProductoRepository {
-    suspend fun obtenerProductos(): Response<List<Producto>> {
-        return RetrofitClient.apiService.obtenerProductos()
+    private val productoApiService = RetroClient.productoApiService
+
+    suspend fun obtenerProducto(id: Int): Response<Producto> {
+        return productoApiService.obtenerProducto(id)
     }
+
+    // Aquí puedes agregar funciones para interactuar con la API y manejar la lógica de datos de productos
 }

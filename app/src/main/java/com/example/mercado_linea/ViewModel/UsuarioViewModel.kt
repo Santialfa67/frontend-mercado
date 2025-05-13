@@ -1,38 +1,35 @@
 package com.example.mercado_linea.ViewModel
 
-
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.mercado_linea.Repository.UserRepository
 import com.example.mercado_linea.model.Usuario
-import com.example.mercado_linea.network.RetrofitClient
-import retrofit2.Call
-import retrofit2.Callback
+import kotlinx.coroutines.launch
 import retrofit2.Response
 
-
 class UsuarioViewModel : ViewModel() {
-    fun crearUsuario(
-        nombre: String,
-        email: String,
-        contraseña: String,
-        telefono: String?,
-        direccion: String?,
-        preferencias: String?
-    ) {
-        val usuario = Usuario(nombre, email, contraseña, telefono, direccion, preferencias)
-        val call = RetrofitClient.apiService.crearUsuario(usuario)
+    private val repository = UserRepository()
 
-        call.enqueue(object : Callback<Usuario> {
-            override fun onResponse(call: Call<Usuario>, response: Response<Usuario>) {
-                if (response.isSuccessful) {
-                    println("✅ Usuario creado: ${response.body()}")
-                } else {
-                    println("❌ Error: ${response.code()} - ${response.errorBody()?.string()}")
-                }
-            }
+    private val _usuario = MutableLiveData<Usuario?>()
+    val usuario: LiveData<Usuario?> = _usuario
 
-            override fun onFailure(call: Call<Usuario>, t: Throwable) {
-                println("❌ Error de red: ${t.message}")
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> = _error
+
+    fun obtenerUsuario(id: Int) {
+        viewModelScope.launch {
+            val response = repository.obtenerUsuario(id)
+            if (response.isSuccessful) {
+                _usuario.value = response.body()
+                _error.value = null
+            } else {
+                _usuario.value = null
+                _error.value = "Error al obtener el usuario: ${response.message()}"
             }
-        })
+        }
     }
+
+    // Aquí puedes agregar otras funciones para manejar la lógica de la interfaz de usuario relacionada con el usuario
 }
